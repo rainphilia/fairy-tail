@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fairy Tail | Tutor & Social Community</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="g" cx="35%25" cy="24%25" r="75%25"><stop offset="0%25" stop-color="%23ffffff"/><stop offset="33%25" stop-color="%237dd3fc"/><stop offset="66%25" stop-color="%2322c55e"/><stop offset="100%25" stop-color="%231e3a8a"/></radialGradient></defs><rect width="64" height="64" rx="18" fill="%23071f5f"/><circle cx="32" cy="32" r="23" fill="url(%23g)"/><circle cx="23" cy="21" r="7" fill="%23ffffff" opacity=".78"/><path d="M14 40C25 22 42 19 52 31" fill="none" stroke="%23bbf7d0" stroke-width="4" stroke-linecap="round" opacity=".82"/></svg>' />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap');
+    * { font-family: 'Noto Sans Thai', system-ui, sans-serif; }
+    :root { --blue-1:#071f5f; --blue-2:#1d4ed8; --blue-3:#38bdf8; --glow: rgba(56,189,248,.45); }
+    html { scroll-behavior: smooth; }
+    body { background: radial-gradient(circle at 10% 0%, #e0f2fe 0, transparent 30%), linear-gradient(180deg,#f8fbff,#eef6ff); color: #172554; overflow-x: hidden; }
+    body::before { content:""; position: fixed; inset: -20%; z-index: -1; background: radial-gradient(circle at 20% 20%, rgba(59,130,246,.18), transparent 22%), radial-gradient(circle at 85% 10%, rgba(14,165,233,.16), transparent 24%), radial-gradient(circle at 55% 85%, rgba(37,99,235,.13), transparent 28%); animation: auroraMove 18s ease-in-out infinite alternate; }
+    .hero { position: relative; background: radial-gradient(circle at 18% 18%, rgba(191,219,254,.72), transparent 24%), radial-gradient(circle at 82% 14%, rgba(125,211,252,.42), transparent 26%), linear-gradient(135deg,#071f5f 0%,#1d4ed8 52%,#38bdf8 100%); }
+    .hero::before { content:""; position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 44px 44px; mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent); }
+    .hero::after { content:""; position:absolute; width:560px; height:560px; right:-180px; top:-120px; border-radius:999px; background: radial-gradient(circle, rgba(255,255,255,.28), transparent 62%); filter: blur(2px); animation: floatSlow 9s ease-in-out infinite; }
+    .glass { background: linear-gradient(145deg, rgba(39, 70, 93, 0.86), rgba(219,234,254,.68)); backdrop-filter: blur(20px); border:1px solid rgba(255,255,255,.7); box-shadow: 0 30px 90px rgba(15, 23, 42, .18); }
+    .card { position: relative; overflow: hidden; transitio
+      n: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease; animation: fadeUp .7s ease both; }
+    .card::before { content:""; position:absolute; inset:0; background: linear-gradient(120deg, transparent 0%, rgba(59,130,246,.08) 42%, rgba(125,211,252,.16) 50%, transparent 62%); transform: translateX(-120%); transition: transform .7s ease; pointer-events:none; }
+    .card:hover { transform: translateY(-9px) scale(1.015); box-shadow: 0 30px 80px rgba(37,99,235,.22); border-color: rgba(59,130,246,.38); }
+    .card:hover::before { transform: translateX(120%); }
+    .nav-active { color: #1342c1; background: linear-gradient(135deg,#dbeafe,#e0f2fe); box-shadow: inset 0 0 0 1px rgba(59,130,246,.18); }
+    .modal { animation: pop .22s ease-out; }
+    .page:not(.hidden) { animation: pageIn .45s ease both; }
+    .reveal { animation: fadeUp .85s ease both; }
+    .reveal-delay-1 { animation-delay: .12s; }
+    .reveal-delay-2 { animation-delay: .24s; }
+    .floating-orb { position:absolute; border-radius:999px; filter: blur(.2px); background: rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.28); box-shadow: 0 0 50px rgba(186,230,253,.28); animation: floatSlow 7s ease-in-out infinite; }
+    .floating-star { position:absolute; color:rgba(255,255,255,.75); animation: twinkle 2.4s ease-in-out infinite; }
+    .glow-title { text-shadow: 0 0 18px rgba(186,230,253,.62), 0 16px 42px rgba(15,23,42,.2); }
+    .shine-btn { position: relative; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease; }
+    .shine-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 42px rgba(37,99,235,.28); }
+    .shine-btn::after { content:""; position:absolute; inset:-80% auto -80% -45%; width:38%; transform: rotate(18deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: shine 3.8s ease-in-out infinite; }
+    .subject-chip { transition: .25s ease; }
+    .subject-chip:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,99,235,.16); }
+    @keyframes pop { from { transform: scale(.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatSlow { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(18px,-24px,0) scale(1.04); } }
+    @keyframes twinkle { 0%,100% { opacity:.35; transform: scale(.9) rotate(0); } 50% { opacity:1; transform: scale(1.16) rotate(12deg); } }
+    @keyframes shine { 0%,55% { left:-55%; } 100% { left:130%; } }
+    @keyframes auroraMove { from { transform: translate3d(-2%, -1%, 0) rotate(0deg); } to { transform: translate3d(2%, 1%, 0) rotate(3deg); } }
+
+    .fairy-orb-logo { --orb-size: 3rem; width: var(--orb-size); height: var(--orb-size); position: relative; display: grid; place-items: center; border-radius: 1.15rem; isolation: isolate; overflow: visible; background: linear-gradient(145deg, rgba(219,234,254,.94), rgba(14,165,233,.42)); box-shadow: 0 16px 38px rgba(37,99,235,.28), 0 0 0 1px rgba(255,255,255,.9) inset; animation: orbFloat 4.4s ease-in-out infinite; }
+    .fairy-orb-logo::before { content:""; position:absolute; inset:-6px; border-radius:1.35rem; background: conic-gradient(from 0deg, rgba(56,189,248,.0), rgba(125,211,252,.9), rgba(34,197,94,.68), rgba(99,102,241,.82), rgba(56,189,248,.0)); filter: blur(.2px); z-index:-2; animation: orbAuraSpin 5.6s linear infinite; }
+    .fairy-orb-logo::after { content:""; position:absolute; inset:-12px; border-radius:999px; background: radial-gradient(circle, rgba(186,230,253,.45), transparent 56%); z-index:-3; animation: orbGlowPulse 2.8s ease-in-out infinite; }
+    .fairy-orb-logo .orb-core { width:72%; height:72%; position:relative; display:block; border-radius:999px; overflow:hidden; background: radial-gradient(circle at 30% 22%, rgba(255,255,255,.98) 0 10%, rgba(224,242,254,.92) 17%, rgba(56,189,248,.95) 40%, rgba(20,184,166,.93) 62%, rgba(30,64,175,.96) 100%); box-shadow: inset -9px -11px 18px rgba(15,23,42,.28), inset 7px 7px 16px rgba(255,255,255,.72), 0 0 22px rgba(125,211,252,.88); animation: orbCoreBreathe 3.1s ease-in-out infinite; }
+    .fairy-orb-logo .orb-core::before { content:""; position:absolute; width:62%; height:28%; left:10%; top:12%; border-radius:999px; background:linear-gradient(90deg, rgba(255,255,255,.8), rgba(255,255,255,.08)); transform:rotate(-25deg); filter: blur(.5px); }
+    .fairy-orb-logo .orb-core::after { content:""; position:absolute; width:120%; height:120%; left:-30%; top:-10%; background: conic-gradient(from 150deg, transparent 0 18%, rgba(255,255,255,.34) 20% 24%, transparent 28% 52%, rgba(187,247,208,.38) 56% 61%, transparent 66% 100%); animation: orbInnerSpin 7.5s linear infinite; }
+    .fairy-orb-logo .orb-sequoia-ring { position:absolute; inset:18%; border-radius:999px; border:2px solid rgba(187,247,208,.78); border-left-color: rgba(255,255,255,.18); border-bottom-color: rgba(125,211,252,.38); transform:rotate(-18deg) scaleX(1.18); box-shadow:0 0 14px rgba(187,247,208,.46); animation: orbRingTilt 3.8s ease-in-out infinite; }
+    .fairy-orb-logo .orb-shine { position:absolute; width:18%; height:18%; right:18%; bottom:20%; border-radius:999px; background:rgba(255,255,255,.82); box-shadow:0 0 16px rgba(255,255,255,.86); animation: orbSpark 1.9s ease-in-out infinite; }
+    .fairy-orb-logo.logo-small { --orb-size: 3rem; }
+    .fairy-orb-logo.logo-footer { --orb-size: 3rem; border-radius:1.1rem; }
+    @keyframes orbFloat { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+    @keyframes orbAuraSpin { to { transform: rotate(360deg); } }
+    @keyframes orbGlowPulse { 0%,100% { opacity:.55; transform:scale(.94); } 50% { opacity:1; transform:scale(1.16); } }
+    @keyframes orbCoreBreathe { 0%,100% { transform:scale(.98); filter:saturate(1); } 50% { transform:scale(1.04); filter:saturate(1.25) brightness(1.05); } }
+    @keyframes orbInnerSpin { to { transform: rotate(360deg); } }
+    @keyframes orbRingTilt { 0%,100% { transform:rotate(-18deg) scaleX(1.18); opacity:.7; } 50% { transform:rotate(16deg) scaleX(1.05); opacity:1; } }
+    @keyframes orbSpark { 0%,100% { transform:scale(.75); opacity:.55; } 50% { transform:scale(1.25); opacity:1; } }
+    .scrollbar::-webkit-scrollbar { width: 8px; }
+    .scrollbar::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 999px; }
+  </style>
+  
+</head>
+<body>
+  <header class="sticky top-0 z-40 bg-white/86 backdrop-blur-xl border-b border-blue-100 shadow-[0_10px_40px_rgba(37,99,235,.08)]">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <button onclick="showPage('home')" class="flex items-center gap-3">
+        <div class="fairy-orb-logo logo-small" aria-label="ไอคอนลูกแก้ว Fairy Tail"><span class="orb-core"><span class="orb-sequoia-ring"></span><span class="orb-shine"></span></span></div>
+        <div class="text-left">
+          <h1 class="text-2xl font-extrabold text-blue-800 leading-6">Fairy Tail</h1>
+          <p class="text-xs text-sky-600">Tutor Matching & Social Community</p>
+        </div>
+      </button>
+      <nav class="flex flex-wrap gap-2 text-sm font-semibold" id="navLinks">
+        <button data-page="home" onclick="showPage('home')" class="navbtn px-4 py-2 rounded-2xl nav-active">หน้าแรก</button>
+        <button data-page="chapters" onclick="showPage('chapters')" class="navbtn px-4 py-2 rounded-2xl hover:bg-blue-50">บทบาท</button>
+        <button data-page="community" onclick="showPage('community')" class="navbtn px-4 py-2 rounded-2xl hover:bg-blue-50">ชุมชนโพสต์</button>
+        <button data-page="matching" onclick="showPage('matching')" class="navbtn px-4 py-2 rounded-2xl hover:bg-blue-50">จับคู่เรียน</button>
+        <button data-page="tutorRoom" onclick="showPage('tutorRoom')" class="navbtn px-4 py-2 rounded-2xl hover:bg-blue-50">ห้องติวเตอร์</button>
+        <a href="#support" class="px-4 py-2 rounded-2xl hover:bg-blue-50 text-blue-700">แจ้งปัญหา</a>
+      </nav>
+      <div id="guestActions" class="flex gap-2">
+        <button onclick="openModal('loginModal')" class="px-4 py-2 rounded-2xl border border-blue-500 text-blue-700 font-semibold">เข้าสู่ระบบ</button>
+        <button onclick="openModal('registerModal')" class="px-4 py-2 rounded-2xl bg-blue-600 text-white font-semibold shadow">สมัครสมาชิก</button>
+      </div>
+      <div id="userActions" class="hidden items-center gap-3">
+        <button onclick="openProfile()" class="flex items-center gap-3 px-3 py-2 rounded-2xl bg-blue-50">
+          <img id="topAvatar" class="w-10 h-10 rounded-xl object-cover" alt="avatar" />
+          <div class="text-left hidden sm:block">
+            <p id="topName" class="font-bold text-blue-900 leading-4"></p>
+            <p id="topRole" class="text-xs text-blue-500"></p>
+          </div>
+        </button>
+        <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-50 text-red-500"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="page hero text-white overflow-hidden min-h-[680px]">
+      <span class="floating-orb w-28 h-28 left-[7%] top-[18%]"></span>
+      <span class="floating-orb w-16 h-16 right-[18%] bottom-[16%]" style="animation-delay:1.1s"></span>
+      <span class="floating-orb w-10 h-10 left-[48%] bottom-[28%]" style="animation-delay:2s"></span>
+      <i class="floating-star fa-solid fa-star left-[12%] bottom-[22%]"></i>
+      <i class="floating-star fa-solid fa-wand-sparkles right-[11%] top-[30%]" style="animation-delay:.8s"></i>
+      <i class="floating-star fa-solid fa-sparkles left-[54%] top-[16%]" style="animation-delay:1.5s"></i>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 py-24 grid lg:grid-cols-2 gap-10 items-center">
+        <div class="reveal">
+          <p class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 border border-white/25 mb-5"><i class="fa-solid fa-wand-magic-sparkles"></i> เว็บไซต์ชุมชนการเรียนรู้สำหรับนักเรียน</p>
+          <h2 class="text-5xl md:text-7xl font-extrabold leading-tight glow-title">Fairy Tail</h2>
+          <p class="mt-6 text-xl text-blue-50 leading-relaxed">แพลตฟอร์มธีมสีน้ำเงินสำหรับนักเรียนมัธยม มีทั้งระบบโซเชียลเพื่อแชร์สิ่งที่ชอบ ระบบเปิดสอนของติวเตอร์ ระบบจับคู่ผู้เรียนกับผู้สอน และแชทเพื่อคุยตกลงเรียนออนไลน์หรือออฟไลน์แบบส่วนตัว</p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <button onclick="showPage('matching')" class="shine-btn px-7 py-4 rounded-3xl bg-white text-blue-700 font-bold shadow-xl"><i class="fa-solid fa-magnifying-glass mr-2"></i> หาติวเตอร์</button>
+            <button onclick="showPage('community')" class="shine-btn px-7 py-4 rounded-3xl border border-white/50 font-bold"><i class="fa-solid fa-users mr-2"></i> เข้าเว็บชุมชน</button>
+          </div>
+        </div>
+        <div class="glass text-blue-950 rounded-[2.5rem] p-5 md:p-7 shadow-2xl reveal reveal-delay-1">
+          <div class="relative overflow-hidden rounded-[2rem] mb-6">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="นักเรียนกำลังเรียนร่วมกัน" class="w-full h-64 object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-950/70 via-blue-900/10 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <p class="text-sm text-blue-100">พื้นที่เรียนรู้และหาเพื่อนเมค</p>
+              <h3 class="text-2xl font-extrabold">แชร์ความสนใจ เรียนกับติวเตอร์ และเติบโตไปด้วยกัน</h3>
+            </div>
+          </div>
+          <h3 class="text-2xl font-extrabold mb-5">ฟีเจอร์หลัก</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="card p-5 rounded-3xl bg-blue-50 border border-blue-100"><i class="fa-solid fa-user-shield text-blue-600 text-2xl"></i><h4 class="font-bold mt-3">บัญชีสองชั้น</h4><p class="text-sm text-blue-700 mt-1">ข้อมูลจริงและโปรไฟล์/อวาตารแยกกัน</p></div>
+            <div class="card p-5 rounded-3xl bg-sky-50 border border-sky-100"><i class="fa-solid fa-chalkboard-user text-sky-600 text-2xl"></i><h4 class="font-bold mt-3">ระบบเปิดสอน</h4><p class="text-sm text-blue-700 mt-1">ติวเตอร์เลือกชั้น ม.1-6 และรายวิชา</p></div>
+            <div class="card p-5 rounded-3xl bg-indigo-50 border border-indigo-100"><i class="fa-solid fa-comments text-indigo-600 text-2xl"></i><h4 class="font-bold mt-3">แชทส่วนตัว</h4><p class="text-sm text-blue-700 mt-1">พื้นที่ตกลงสอนส่วนตัว โดยทีมหลังบ้านไม่แสดงเนื้อหาแชท</p></div>
+            <div class="card p-5 rounded-3xl bg-cyan-50 border border-cyan-100"><i class="fa-solid fa-chart-line text-cyan-600 text-2xl"></i><h4 class="font-bold mt-3">ข้อมูลเชิงลึก</h4><p class="text-sm text-blue-700 mt-1">ติดตามภาพรวมผู้ใช้ ติวเตอร์ และโพสต์</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 pb-14">
+        <div class="glass rounded-[2rem] p-5 reveal reveal-delay-2">
+          <p class="font-extrabold text-blue-950 mb-3"><i class="fa-solid fa-layer-group text-sky-500 mr-2"></i>รายวิชาใหม่ที่รองรับมากขึ้น</p>
+          <div class="flex flex-wrap gap-2 text-sm" id="subjectShowcase"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chapters" class="page hidden py-16">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-extrabold text-center text-blue-900"> บทบาทของเว็บไซต์ Fairy Tail</h2>
+        <p class="text-center text-blue-600 mt-3">ออกแบบตามบทที่ผู้ใช้ต้องการ: ผู้พัฒนา, ผู้ใช้ทั่วไป , คนลงสอน/ติวเตอร์, ผู้รับการสอน/ผู้เรียน</p>
+        <div class="grid md:grid-cols-3 gap-6 mt-10">
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" alt="นักเรียนค้นหาคนสอน" class="w-full h-40 object-cover rounded-3xl mb-5"><div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 grid place-items-center text-2xl"><i class="fa-solid fa-user-plus"></i></div><h3 class="text-2xl font-bold mt-5">1. ผู้ใช้ทั่วไป</h3><p class="mt-3 text-blue-700">สมัครบัญชี เลือกบทบาทผู้เรียนหรือผู้สอน และเริ่มใช้งานระบบได้อย่างเป็นระเบียบ</p><button onclick="openModal('registerModal')" class="mt-6 w-full py-3 rounded-2xl bg-blue-600 text-white font-bold">สมัครสมาชิก</button></article>
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=900&q=80" alt="ติวเตอร์กำลังสอน" class="w-full h-40 object-cover rounded-3xl mb-5"><div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 grid place-items-center text-2xl"><i class="fa-solid fa-book-open-reader"></i></div><h3 class="text-2xl font-bold mt-5">2. ติวเตอร์</h3><p class="mt-3 text-blue-700">เปิดหรือปิดรับสอน เลือกระดับชั้น รายวิชา และรูปแบบออนไลน์/ออฟไลน์</p><button onclick="showPage('tutorRoom')" class="mt-6 w-full py-3 rounded-2xl bg-emerald-600 text-white font-bold">ห้องติวเตอร์</button></article>
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80" alt="ผู้เรียนทำงานเป็นกลุ่ม" class="w-full h-40 object-cover rounded-3xl mb-5"><div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 grid place-items-center text-2xl"><i class="fa-solid fa-graduation-cap"></i></div><h3 class="text-2xl font-bold mt-5">3. ผู้เรียน</h3><p class="mt-3 text-blue-700">เลือกสิ่งที่ต้องการเรียนและระดับชั้น แล้วระบบจะแมชกับติวเตอร์ที่ตรงกัน</p><button onclick="showPage('matching')" class="mt-6 w-full py-3 rounded-2xl bg-indigo-600 text-white font-bold">เริ่มจับคู่</button></article>
+        </div>
+        <div class="mt-20 max-w-3xl mx-auto opacity-90">
+          <article class="card bg-gradient-to-br from-slate-900 to-blue-950 rounded-[2rem] p-7 border border-blue-800 text-white">
+            <div class="flex flex-col md:flex-row gap-6 items-center"><div class="w-16 h-16 rounded-2xl bg-amber-400/20 text-amber-300 grid place-items-center text-2xl"><i class="fa-solid fa-crown"></i></div><div class="flex-1"><h3 class="text-2xl font-bold">4. ผู้พัฒนา</h3><p class="mt-2 text-blue-100">พื้นที่ดูแลระบบถูกแยกไว้ท้ายเว็บไซต์สำหรับตรวจสถิติ บัญชี ผู้สอน โพสต์ และการแบนบัญชี 1-30 วัน</p></div><button onclick="showPage('developer')" class="px-6 py-3 rounded-2xl bg-amber-500 text-white font-bold">ไปส่วนท้ายผู้พัฒนา</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="community" class="page hidden py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div><h2 class="text-4xl font-extrabold text-blue-900">ชุมชนโพสต์ Fairy Tail</h2><p class="text-blue-600 mt-2">โพสต์ โปรโมท และนำเสนอสิ่งที่ชอบเพื่อหาเพื่อนเมค</p></div>
+          <button onclick="openCreatePost()" class="shine-btn px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold shadow"><i class="fa-solid fa-plus mr-2"></i> สร้างโพสต์</button>
+        </div>
+        <div id="postList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"></div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-gradient-to-b from-white to-blue-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid lg:grid-cols-3 gap-6">
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><i class="fa-solid fa-id-card text-blue-600 text-3xl"></i><h3 class="text-2xl font-extrabold mt-4">สมัครและสร้างโปรไฟล์</h3><p class="text-blue-700 mt-3">ใช้ข้อมูลจริงสำหรับยืนยันตัวตนภายในระบบ และใช้ชื่อโปรไฟล์/อวาตารสำหรับแสดงในชุมชน</p></article>
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><i class="fa-solid fa-magnifying-glass-chart text-sky-600 text-3xl"></i><h3 class="text-2xl font-extrabold mt-4">เลือกวิชาและระดับชั้น</h3><p class="text-blue-700 mt-3">ผู้เรียนเลือกชั้น ม.1-6 และรายวิชา ส่วนติวเตอร์เลือกวิชาที่เปิดสอนได้หลายหมวด</p></article>
+          <article class="card bg-white rounded-[2rem] p-7 border border-blue-100"><i class="fa-solid fa-handshake text-indigo-600 text-3xl"></i><h3 class="text-2xl font-extrabold mt-4">ตกลงการเรียนอย่างปลอดภัย</h3><p class="text-blue-700 mt-3">ใช้แชทส่วนตัวเพื่อตกลงเวลา สถานที่ รูปแบบออนไลน์หรือออฟไลน์ และรายละเอียดการเรียน</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="matching" class="page hidden py-16">
+      <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-[420px,1fr] gap-8">
+        <aside class="bg-white rounded-[2rem] p-7 border border-blue-100 shadow-sm h-fit">
+          <h2 class="text-3xl font-extrabold text-blue-900">ระบบจับคู่ผู้เรียน</h2>
+          <p class="text-blue-600 mt-2">เลือกระดับชั้นและรายวิชาที่ต้องการเรียน</p>
+          <label class="block font-bold mt-6 mb-2">ระดับชั้น</label>
+          <div id="learnGrades" class="grid grid-cols-3 gap-2"></div>
+          <label class="block font-bold mt-6 mb-2">รายวิชา</label>
+          <select id="learnSubject" class="w-full px-4 py-3 rounded-2xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"></select>
+          <button onclick="matchTutors()" class="shine-btn mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-blue-700 to-sky-500 text-white font-extrabold shadow">จับคู่แมชกัน</button>
+          <p class="text-xs text-blue-500 mt-4">หมายเหตุ: ไฟล์นี้เป็นต้นแบบฝั่งหน้าเว็บ ข้อมูลถูกเก็บในเครื่องผู้ใช้ด้วย localStorage</p>
+        </aside>
+        <div>
+          <div class="bg-blue-50 border border-blue-100 rounded-[2rem] p-6 mb-6">
+            <h3 class="font-extrabold text-blue-900"><i class="fa-solid fa-lock mr-2"></i> ความเป็นส่วนตัวของแชท</h3>
+            <p class="text-blue-700 mt-2">แดชบอร์ดผู้พัฒนาจะแสดงเฉพาะจำนวนการติดต่อและข้อมูลเชิงสถิติ แต่ไม่แสดงเนื้อหาแชทส่วนตัว เพื่อรักษาความเป็นส่วนตัวของผู้เรียนและติวเตอร์</p>
+          </div>
+          <h3 class="text-2xl font-extrabold mb-4">ผลการจับคู่</h3>
+          <div id="matchResults" class="grid md:grid-cols-2 gap-6"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tutorRoom" class="page hidden py-16 bg-white">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="bg-gradient-to-br from-blue-700 to-sky-500 text-white rounded-[2.5rem] p-8 shadow-xl">
+          <h2 class="text-4xl font-extrabold">ห้องติวเตอร์</h2>
+          <p class="mt-3 text-blue-50">ตั้งค่าการเปิดสอน/ปิดสอน เลือกระดับชั้น ม.1-6 และรายวิชาที่ต้องการสอน</p>
+        </div>
+        <div class="mt-8 grid lg:grid-cols-2 gap-6">
+          <form onsubmit="saveTutorSettings(event)" class="bg-white rounded-[2rem] p-7 border border-blue-100 shadow-sm">
+            <h3 class="text-2xl font-extrabold mb-5">ตั้งค่าการสอน</h3>
+            <label class="flex items-center justify-between p-4 rounded-2xl bg-blue-50 border border-blue-100 font-bold">สถานะเปิดสอน <input id="tutorOpen" type="checkbox" class="w-6 h-6 accent-blue-600" /></label>
+            <label class="block font-bold mt-6 mb-2">ระดับชั้นที่สอน</label>
+            <div id="teachGrades" class="grid grid-cols-3 gap-2"></div>
+            <label class="block font-bold mt-6 mb-2">รายวิชาที่สอน</label>
+            <div id="teachSubjects" class="grid sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto scrollbar pr-2"></div>
+            <label class="block font-bold mt-6 mb-2">รูปแบบการสอน</label>
+            <select id="teachMode" class="w-full px-4 py-3 rounded-2xl border border-blue-200"><option>ออนไลน์</option><option>ออฟไลน์</option><option>ออนไลน์และออฟไลน์</option></select>
+            <button class="mt-6 w-full py-4 rounded-2xl bg-emerald-600 text-white font-extrabold">บันทึกข้อมูลติวเตอร์</button>
+          </form>
+          <div class="bg-blue-50 rounded-[2rem] p-7 border border-blue-100">
+            <h3 class="text-2xl font-extrabold mb-5">สถานะของคุณ</h3>
+            <div id="tutorStatusCard"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="developer" class="page hidden py-24 bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white">
+      <div class="max-w-7xl mx-auto px-4">
+        <div id="devLocked" class="max-w-md mx-auto bg-white/10 backdrop-blur-xl rounded-[2rem] p-8 border border-white/15 shadow-2xl">
+          <h2 class="text-3xl font-extrabold text-white">เข้าสู่ระบบผู้พัฒนา</h2>
+          <p class="text-blue-100 mt-2">เข้าสู่ระบบด้วยบัญชีที่เลือกบทบาทผู้พัฒนา เพื่อใช้งานโปรไฟล์ โพสต์ ชุมชน และแดชบอร์ดได้ในบัญชีเดียวกัน</p>
+          <div id="devAccountHint" class="mt-5 p-4 rounded-2xl bg-white/10 border border-white/10 text-blue-50 text-sm">กรุณาเข้าสู่ระบบด้วยบัญชีผู้พัฒนาก่อนเข้าแดชบอร์ด</div>
+          <div class="mt-5 grid sm:grid-cols-2 gap-3">
+            <button type="button" onclick="openModal('loginModal')" class="py-3 rounded-2xl bg-white text-blue-900 font-bold">ล็อกอินบัญชี</button>
+            <button type="button" onclick="openModal('registerModal')" class="py-3 rounded-2xl bg-blue-600 text-white font-bold">สมัครบัญชี</button>
+          </div>
+          <input id="devAccessCode" type="password" placeholder="รหัสลับผู้พัฒนา" class="input mt-4 bg-white/95 text-slate-900" />
+          <p class="text-xs text-blue-100 mt-2">ต้องกรอกรหัสลับทุกครั้งก่อนเข้าแดชบอร์ดผู้พัฒนา</p>
+          <button type="button" onclick="developerLogin()" class="mt-4 w-full py-3 rounded-2xl bg-amber-500 text-white font-bold">ตรวจสอบสิทธิ์และเข้าแดชบอร์ด</button>
+        </div>
+        <div id="devPanel" class="hidden">
+          <div class="flex flex-wrap justify-between gap-4 items-end mb-8">
+            <div><h2 class="text-4xl font-extrabold text-white">แดชบอร์ดผู้พัฒนา</h2><p class="text-blue-100 mt-2">ดูข้อมูลเชิงลึกและจัดการบัญชี โดยไม่แสดงเนื้อหาแชทส่วนตัว</p></div>
+          </div>
+          <div id="insights" class="grid md:grid-cols-2 lg:grid-cols-5 gap-4"></div>
+          <div class="mt-8 bg-white rounded-[2rem] border border-blue-100 overflow-hidden shadow-sm">
+            <div class="p-6 border-b border-blue-100"><h3 class="text-2xl font-extrabold">บัญชีทั้งหมด</h3></div>
+            <div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="bg-blue-50 text-blue-900"><tr><th class="text-left p-4">ชื่อจริง</th><th class="text-left p-4">โปรไฟล์</th><th class="text-left p-4">บทบาท</th><th class="text-left p-4">ชั้น</th><th class="text-left p-4">สถานะ</th><th class="text-left p-4">จัดการ</th></tr></thead><tbody id="accountTable"></tbody></table></div>
+          </div>
+          <div class="mt-8 bg-white rounded-[2rem] border border-blue-100 overflow-hidden shadow-sm">
+            <div class="p-6 border-b border-blue-100"><h3 class="text-2xl font-extrabold">โพสต์ทั้งหมด</h3><p class="text-sm text-blue-600 mt-1">ผู้พัฒนาสามารถลบโพสต์ที่ไม่เหมาะสมออกจากชุมชนได้</p></div>
+            <div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="bg-blue-50 text-blue-900"><tr><th class="text-left p-4">ผู้โพสต์</th><th class="text-left p-4">เนื้อหา</th><th class="text-left p-4">เวลา</th><th class="text-left p-4">สถานะ</th><th class="text-left p-4">จัดการ</th></tr></thead><tbody id="postTable"></tbody></table></div>
+          </div>
+          <div class="mt-8 bg-white rounded-[2rem] border border-blue-100 overflow-hidden shadow-sm">
+            <div class="p-6 border-b border-blue-100"><h3 class="text-2xl font-extrabold">รีวิวและคะแนนติวเตอร์</h3><p class="text-sm text-blue-600 mt-1">ผู้พัฒนาสามารถตรวจสอบและลบรีวิวที่ไม่เหมาะสมได้</p></div>
+            <div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="bg-blue-50 text-blue-900"><tr><th class="text-left p-4">ติวเตอร์</th><th class="text-left p-4">ผู้รีวิว</th><th class="text-left p-4">คะแนน</th><th class="text-left p-4">รีวิว</th><th class="text-left p-4">เวลา</th><th class="text-left p-4">จัดการ</th></tr></thead><tbody id="reviewTable"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="support" class="bg-slate-950 text-white pt-16 pb-10">
+    <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-[1.2fr,.8fr,.8fr] gap-8">
+      <div>
+        <div class="flex items-center gap-3"><div class="fairy-orb-logo logo-footer" aria-label="ไอคอนลูกแก้ว Fairy Tail"><span class="orb-core"><span class="orb-sequoia-ring"></span><span class="orb-shine"></span></span></div><div><h2 class="text-2xl font-extrabold">Fairy Tail</h2><p class="text-blue-200 text-sm">Tutor Matching & Social Community</p></div></div>
+        <p class="mt-5 text-blue-100 leading-relaxed">เว็บไซต์สำหรับนักเรียนที่ต้องการแชร์ความสนใจ หาเพื่อนเมค หาติวเตอร์ และเปิดพื้นที่การเรียนรู้ที่เป็นมิตร ปลอดภัย และจัดการได้ง่าย</p>
+      </div>
+      <div class="bg-white/10 rounded-[2rem] p-6 border border-white/10">
+        <h3 class="text-xl font-extrabold">ติดต่อแจ้งปัญหา</h3>
+        <p class="text-blue-100 mt-3">หากพบปัญหาการใช้งาน บัญชีผิดปกติ หรือข้อเสนอแนะเกี่ยวกับเว็บไซต์ สามารถติดต่อได้ที่</p>
+        <p class="mt-4 text-2xl font-extrabold text-sky-300">Line: madambelly</p>
+      </div>
+      <div class="bg-white/10 rounded-[2rem] p-6 border border-white/10">
+        <h3 class="text-xl font-extrabold">สำหรับผู้พัฒนา</h3>
+        <p class="text-blue-100 mt-3">ส่วนผู้พัฒนาถูกจัดไว้ท้ายเว็บไซต์ เพื่อแยกจากพื้นที่ผู้เรียนและติวเตอร์อย่างชัดเจน</p>
+        <button type="button" onclick="showPage('developer')" class="mt-5 w-full py-3 rounded-2xl bg-amber-500 text-white font-bold">เข้าสู่พื้นที่ผู้พัฒนา</button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 mt-10 text-sm text-blue-200 border-t border-white/10 pt-6">© 2026 Fairy Tail. โปรดใช้ข้อมูลอย่างเหมาะสมและเคารพความเป็นส่วนตัวของสมาชิกทุกคน</div>
+  </footer>
+
+  <div id="registerModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4 overflow-y-auto">
+    <div class="modal max-w-2xl mx-auto my-8 bg-white rounded-[2rem] p-7">
+      <div class="flex justify-between gap-4"><h3 class="text-3xl font-extrabold text-blue-900">สมัครสมาชิก Fairy Tail</h3><button onclick="closeModal('registerModal')" class="text-3xl text-slate-400">×</button></div>
+      <form onsubmit="register(event)" class="mt-6 grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2 p-4 rounded-2xl bg-blue-50 border border-blue-100"><b>ชั้นที่ 1: ข้อมูลผู้ใช้จริง</b><p class="text-sm text-blue-700">ระบบจะกันชื่อจริง+นามสกุลจริง+ระดับชั้นซ้ำ ไม่ให้สมัครซ้ำ</p></div>
+        <input id="regFirst" required placeholder="ชื่อจริง" class="input" />
+        <input id="regLast" required placeholder="นามสกุลจริง" class="input" />
+        <select id="regGrade" required class="input"><option value="">เลือกระดับชั้น</option></select>
+        <input id="regEmail" required type="email" placeholder="อีเมล" class="input" />
+        <input id="regPass" required type="password" placeholder="รหัสผ่าน" class="input sm:col-span-2" />
+        <div class="sm:col-span-2 p-4 rounded-2xl bg-sky-50 border border-sky-100"><b>ชั้นที่ 2: โปรไฟล์และอวาตาร</b><p class="text-sm text-blue-700">ใช้แสดงในชุมชน เพื่อไม่ต้องเปิดเผยชื่อจริงตลอดเวลา</p></div>
+        <input id="regNick" required placeholder="ชื่อโปรไฟล์ / ชื่อเล่น" class="input" />
+        <select id="regRole" required onchange="toggleDeveloperSecret()" class="input"><option value="">เลือกบทบาท</option><option value="student">ผู้รับการสอน / ผู้เรียน</option><option value="tutor">คนที่ลงสอน / รับบทติวเตอร์</option><option value="developer">ผู้พัฒนา / ผู้ดูแลเว็บไซต์</option></select>
+        <div id="regDevSecretWrap" class="hidden sm:col-span-2 p-4 rounded-2xl bg-amber-50 border border-amber-200">
+          <label class="block font-bold text-amber-900 mb-2">รหัสลับสำหรับสมัครบทบาทผู้พัฒนา</label>
+          <input id="regDevSecret" type="password" placeholder="กรอกรหัสลับผู้พัฒนา" class="input bg-white" />
+          <p class="text-sm text-amber-800 mt-2">ใช้เฉพาะผู้ที่ได้รับสิทธิ์ดูแลเว็บไซต์เท่านั้น</p>
+        </div>
+        <input id="regAvatar" placeholder="URL รูปอวาตาร เช่น รูปโปรไฟล์หรือภาพที่ชอบ (ไม่ใส่ได้)" class="input sm:col-span-2" />
+        <textarea id="regBio" placeholder="แนะนำตัวสั้น ๆ" class="input sm:col-span-2 h-24"></textarea>
+        <button class="sm:col-span-2 py-4 rounded-2xl bg-blue-600 text-white font-extrabold">สร้างบัญชี</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4">
+    <div class="modal max-w-md mx-auto mt-20 bg-white rounded-[2rem] p-7">
+      <div class="flex justify-between"><h3 class="text-3xl font-extrabold text-blue-900">เข้าสู่ระบบ</h3><button onclick="closeModal('loginModal')" class="text-3xl text-slate-400">×</button></div>
+      <form onsubmit="login(event)" class="mt-6 space-y-4">
+        <input id="loginEmail" type="email" required placeholder="อีเมล" class="input" />
+        <input id="loginPass" type="password" required placeholder="รหัสผ่าน" class="input" />
+        <button class="w-full py-4 rounded-2xl bg-blue-600 text-white font-extrabold">เข้าสู่ระบบ</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4 overflow-y-auto">
+    <div class="modal max-w-lg mx-auto my-10 bg-white rounded-[2rem] p-7">
+      <div class="flex justify-between"><h3 class="text-3xl font-extrabold text-blue-900">โปรไฟล์</h3><button onclick="closeModal('profileModal')" class="text-3xl text-slate-400">×</button></div>
+      <div id="profileContent" class="mt-6"></div>
+    </div>
+  </div>
+
+  <div id="postModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4 overflow-y-auto">
+    <div class="modal max-w-xl mx-auto my-10 bg-white rounded-[2rem] p-7">
+      <div class="flex justify-between"><h3 class="text-3xl font-extrabold text-blue-900">สร้างโพสต์ใหม่</h3><button onclick="closeModal('postModal')" class="text-3xl text-slate-400">×</button></div>
+      <form onsubmit="createPost(event)" class="mt-6 space-y-4">
+        <textarea id="postText" required placeholder="แชร์สิ่งที่ชอบ ความสนใจ โปรโมท หรือหาเพื่อนเมค..." class="input h-36"></textarea>
+        <label class="flex items-center gap-3 p-4 rounded-2xl bg-blue-50 border border-blue-100"><input id="postPromote" type="checkbox" class="w-5 h-5 accent-blue-600" /> โปรโมทโพสต์นี้</label>
+        <label class="block"><span class="font-bold">อัปโหลดคลิปวิดีโอในโพสต์ชุมชน</span><input id="postVideo" type="file" accept="video/*" class="mt-2 block w-full text-sm" /></label>
+        <button class="w-full py-4 rounded-2xl bg-blue-600 text-white font-extrabold">โพสต์ลงเว็บไซต์</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="chatModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4">
+    <div class="modal max-w-2xl mx-auto my-8 bg-white rounded-[2rem] overflow-hidden">
+      <div class="p-5 bg-blue-700 text-white flex justify-between items-center">
+        <div><h3 id="chatTitle" class="text-xl font-extrabold"></h3><p class="text-sm text-blue-100">แชทส่วนตัวสำหรับตกลงเรียนออนไลน์/ออฟไลน์</p></div>
+        <button onclick="closeModal('chatModal')" class="text-3xl">×</button>
+      </div>
+      <div id="chatBox" class="h-96 overflow-y-auto p-5 bg-blue-50 scrollbar"></div>
+      <form onsubmit="sendChat(event)" class="p-4 flex gap-3 border-t border-blue-100">
+        <input id="chatInput" class="flex-1 px-4 py-3 rounded-2xl border border-blue-200" placeholder="พิมพ์ข้อความ..." />
+        <button class="px-6 rounded-2xl bg-blue-600 text-white font-bold">ส่ง</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="reviewModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 p-4 overflow-y-auto">
+    <div class="modal max-w-xl mx-auto my-10 bg-white rounded-[2rem] p-7">
+      <div class="flex justify-between gap-4"><div><h3 id="reviewTitle" class="text-3xl font-extrabold text-blue-900">ให้คะแนนติวเตอร์</h3><p id="reviewHint" class="text-blue-600 mt-1"></p></div><button onclick="closeModal('reviewModal')" class="text-3xl text-slate-400">×</button></div>
+      <form onsubmit="submitReview(event)" class="mt-6 space-y-4">
+        <label class="block font-bold text-blue-900">คะแนน</label>
+        <select id="reviewRating" required class="input">
+          <option value="">เลือกคะแนน</option>
+          <option value="5">5 ดาว — ดีมาก</option>
+          <option value="4">4 ดาว — ดี</option>
+          <option value="3">3 ดาว — ปานกลาง</option>
+          <option value="2">2 ดาว — ควรปรับปรุง</option>
+          <option value="1">1 ดาว — ไม่พอใจ</option>
+        </select>
+        <label class="block font-bold text-blue-900">รีวิว / ความคิดเห็น</label>
+        <textarea id="reviewText" required placeholder="เขียนรีวิวอย่างสุภาพ เช่น สอนเข้าใจง่าย ตรงเวลา หรือมีจุดที่อยากให้ปรับปรุง" class="input h-32"></textarea>
+        <p class="text-sm text-blue-600">หนึ่งบัญชีสามารถรีวิวติวเตอร์คนเดิมได้หนึ่งครั้ง หากส่งใหม่จะอัปเดตรีวิวเดิมของบัญชีนั้น</p>
+        <button class="w-full py-4 rounded-2xl bg-amber-500 text-white font-extrabold">บันทึกรีวิวและคะแนน</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const subjects = ['เคมี','ชีวะ','ฟิสิกส์','วิทยาศาสตร์พื้นฐาน','ดาราศาสตร์','คณิตศาสตร์เพิ่มเติม','คณิตศาสตร์พื้นฐาน','สถิติ','แคลคูลัสเบื้องต้น','ภาษาอังกฤษ','ภาษาไทย','ภาษาญี่ปุ่น','ภาษาจีน','สังคมศึกษา','ประวัติศาสตร์','ภูมิศาสตร์','เศรษฐศาสตร์','หน้าที่พลเมือง','ศาสนาและวัฒนธรรม','สังคมการปฏิบัติ','คอมพิวเตอร์','เขียนโปรแกรม Python','เขียนเว็บไซต์ HTML CSS JavaScript','ออกแบบ UI UX','กราฟิกดีไซน์','ตัดต่อวิดีโอ','ดนตรี','ศิลปะ','สุขศึกษา','แนะแนวการเรียน','เตรียมสอบ TGAT TPAT','เตรียมสอบ A-Level'];
+    const grades = ['ม.1','ม.2','ม.3','ม.4','ม.5','ม.6'];
+    const DEVELOPER_SECRET_CODE = 'kucsow-3kimvi-Heqbarkucsow-3kimvi-Heqbar';
+    const $ = id => document.getElementById(id);
+    const store = {
+      get accounts(){ return JSON.parse(localStorage.getItem('ft_accounts') || '[]'); },
+      set accounts(v){ localStorage.setItem('ft_accounts', JSON.stringify(v)); },
+      get posts(){ return JSON.parse(localStorage.getItem('ft_posts') || '[]'); },
+      set posts(v){ localStorage.setItem('ft_posts', JSON.stringify(v)); },
+      get chats(){ return JSON.parse(localStorage.getItem('ft_chats') || '{}'); },
+      set chats(v){ localStorage.setItem('ft_chats', JSON.stringify(v)); },
+      get reviews(){ return JSON.parse(localStorage.getItem('ft_reviews') || '[]'); },
+      set reviews(v){ localStorage.setItem('ft_reviews', JSON.stringify(v)); },
+      get current(){ return JSON.parse(localStorage.getItem('ft_current') || 'null'); },
+      set current(v){ v ? localStorage.setItem('ft_current', JSON.stringify(v)) : localStorage.removeItem('ft_current'); }
+    };
+    let selectedLearnGrade = '', activeChatWith = null, activeReviewTutorId = null;
+
+    document.querySelectorAll('.input').forEach(el => el.classList.add('w-full','px-4','py-3','rounded-2xl','border','border-blue-200','focus:outline-none','focus:ring-2','focus:ring-blue-400'));
+
+    function init(){
+      fillSelects(); renderGradeButtons(); renderTeachOptions(); cleanLegacyStarterData(); renderAll(); showPage('home');
+      document.addEventListener('keydown', e => { if(e.key === 'Escape') document.querySelectorAll('.fixed').forEach(m => m.classList.add('hidden')); });
+    }
+    function fillSelects(){
+      $('regGrade').innerHTML = '<option value="">เลือกระดับชั้น</option>' + grades.map(g=>`<option>${g}</option>`).join('');
+      $('learnSubject').innerHTML = '<option value="">เลือกรายวิชา</option>' + subjects.map(s=>`<option>${s}</option>`).join('');
+      if($('subjectShowcase')) $('subjectShowcase').innerHTML = subjects.slice(0, 18).map(s => `<span class="subject-chip px-3 py-1.5 rounded-full bg-white/80 border border-blue-100 text-blue-700 font-semibold">${s}</span>`).join('') + `<span class="px-3 py-1.5 rounded-full bg-blue-600 text-white font-bold">+${subjects.length - 18} วิชา</span>`;
+    }
+    function renderGradeButtons(){
+      $('learnGrades').innerHTML = grades.map(g => `<button onclick="selectedLearnGrade='${g}'; renderGradeButtons();" class="py-3 rounded-2xl border font-bold ${selectedLearnGrade===g?'bg-blue-600 text-white border-blue-600':'bg-white border-blue-200 text-blue-700'}">${g}</button>`).join('');
+    }
+    function renderTeachOptions(){
+      $('teachGrades').innerHTML = grades.map(g => `<label class="p-3 rounded-2xl border border-blue-100 bg-blue-50"><input type="checkbox" name="teachGrade" value="${g}" class="accent-blue-600"> ${g}</label>`).join('');
+      $('teachSubjects').innerHTML = subjects.map(s => `<label class="subject-chip p-3 rounded-2xl border border-blue-100 bg-blue-50"><input type="checkbox" name="teachSubject" value="${s}" class="accent-blue-600"> ${s}</label>`).join('');
+    }
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      $(id).classList.remove('hidden');
+      document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('nav-active', b.dataset.page === id));
+      if(id === 'community') renderPosts();
+      if(id === 'matching') { renderGradeButtons(); matchTutors(true); }
+      if(id === 'tutorRoom') renderTutorRoom();
+      if(id === 'developer') renderDeveloper();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function openModal(id){ $(id).classList.remove('hidden'); if(id === 'registerModal') toggleDeveloperSecret(); }
+    function closeModal(id){ $(id).classList.add('hidden'); }
+    function toggleDeveloperSecret(){
+      const isDeveloperRole = $('regRole')?.value === 'developer';
+      if($('regDevSecretWrap')) $('regDevSecretWrap').classList.toggle('hidden', !isDeveloperRole);
+      if($('regDevSecret')) $('regDevSecret').required = isDeveloperRole;
+    }
+    function avatar(seed){ return `https://api.dicebear.com/8.x/adventurer/svg?seed=${encodeURIComponent(seed || 'fairy')}`; }
+    function nowThai(){ return new Date().toLocaleString('th-TH', { dateStyle:'medium', timeStyle:'short' }); }
+    function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch])); }
+    function currentAccount(){ const cur = store.current; return cur ? store.accounts.find(a => a.id === cur.id) : null; }
+    function isBanned(a){ return a?.banUntil && new Date(a.banUntil) > new Date(); }
+    function roleText(r){ return r === 'tutor' ? 'ติวเตอร์' : r === 'developer' ? 'ผู้พัฒนา' : 'ผู้เรียน'; }
+
+    function register(e){
+      e.preventDefault();
+      const accounts = store.accounts;
+      const realKey = `${$('regFirst').value.trim()}|${$('regLast').value.trim()}|${$('regGrade').value}`.toLowerCase();
+      if(accounts.some(a => a.realKey === realKey)) return alert('มีชื่อจริง นามสกุลจริง และระดับชั้นนี้ในระบบแล้ว ไม่สามารถสมัครซ้ำได้');
+      if(accounts.some(a => a.email === $('regEmail').value.trim())) return alert('อีเมลนี้ถูกใช้แล้ว');
+      const selectedRole = $('regRole').value;
+      if(selectedRole === 'developer' && $('regDevSecret').value.trim() !== DEVELOPER_SECRET_CODE) return alert('รหัสลับผู้พัฒนาไม่ถูกต้อง ไม่สามารถสมัครบทบาทผู้พัฒนาได้');
+      const a = { id: Date.now(), realKey, first:$('regFirst').value.trim(), last:$('regLast').value.trim(), grade:$('regGrade').value, email:$('regEmail').value.trim(), pass:$('regPass').value, role:selectedRole, nick:$('regNick').value.trim(), bio:$('regBio').value.trim(), avatar:$('regAvatar').value.trim() || avatar($('regNick').value), createdAt: nowThai(), tutor:{open:false, grades:[], subjects:[], mode:'ออนไลน์'}, contacts:0, banUntil:null };
+      accounts.push(a); store.accounts = accounts; store.current = {id:a.id}; closeModal('registerModal'); renderAll(); alert('สมัครสมาชิกสำเร็จ');
+    }
+    function login(e){
+      e.preventDefault();
+      const a = store.accounts.find(x => x.email === $('loginEmail').value.trim() && x.pass === $('loginPass').value);
+      if(!a) return alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      if(isBanned(a)) return alert('บัญชีนี้ถูกแบนถึงวันที่ ' + new Date(a.banUntil).toLocaleDateString('th-TH'));
+      store.current = {id:a.id}; closeModal('loginModal'); renderAll(); alert('เข้าสู่ระบบสำเร็จ');
+    }
+    function logout(){ store.current = null; $('devPanel').classList.add('hidden'); $('devLocked').classList.remove('hidden'); renderAll(); alert('ออกจากระบบแล้ว'); }
+    function renderAuth(){
+      const a = currentAccount();
+      $('guestActions').classList.toggle('hidden', !!a); $('userActions').classList.toggle('hidden', !a); $('userActions').classList.toggle('flex', !!a);
+      if(a){ $('topAvatar').src = a.avatar; $('topName').textContent = a.nick; $('topRole').textContent = roleText(a.role); }
+    }
+    function openProfile(){
+      const a = currentAccount(); if(!a) return;
+      $('profileContent').innerHTML = `<div class="text-center"><img src="${a.avatar}" class="w-28 h-28 mx-auto rounded-3xl object-cover bg-blue-50"><h4 class="text-2xl font-extrabold mt-4">${a.nick}</h4><p class="text-blue-600">${roleText(a.role)}</p></div><div class="mt-6 space-y-3 text-blue-900"><p><b>ชื่อจริง:</b> ${a.first} ${a.last}</p><p><b>ระดับชั้น:</b> ${a.grade}</p><p><b>อีเมล:</b> ${a.email}</p><p><b>แนะนำตัว:</b> ${a.bio || '-'}</p></div>`;
+      openModal('profileModal');
+    }
+
+    function openCreatePost(){ if(!currentAccount()) return alert('กรุณาเข้าสู่ระบบก่อนโพสต์'); openModal('postModal'); }
+    function createPost(e){
+      e.preventDefault(); const a = currentAccount(); if(!a) return;
+      const file = $('postVideo').files[0];
+      const posts = store.posts;
+      posts.unshift({ id:Date.now(), authorId:a.id, author:a.nick, avatar:a.avatar, text:$('postText').value.trim(), promote:$('postPromote').checked, videoName:file?file.name:'', videoUrl:file?URL.createObjectURL(file):'', likes:0, time:nowThai() });
+      store.posts = posts.map(p => ({...p, videoUrl: p.videoUrl && p.videoUrl.startsWith('blob:') ? '' : p.videoUrl}));
+      closeModal('postModal'); $('postText').value=''; $('postPromote').checked=false; $('postVideo').value=''; renderPosts(); alert('โพสต์สำเร็จ');
+    }
+    function renderPosts(){
+      const posts = store.posts;
+      $('postList').innerHTML = posts.length ? posts.map(p => `<article class="card bg-white/95 backdrop-blur rounded-[2rem] border ${p.promote?'border-amber-300 ring-4 ring-amber-50':'border-blue-100'} p-6 shadow-sm">${p.promote?'<span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold mb-3">โพสต์โปรโมท</span>':''}<div class="flex gap-3 items-center"><img src="${p.avatar}" class="w-12 h-12 rounded-2xl object-cover"><div><h4 class="font-extrabold">${p.author}</h4><p class="text-xs text-blue-500">${p.time}</p></div></div><p class="mt-5 text-blue-900 whitespace-pre-line">${p.text}</p>${p.videoName?`<div class="mt-4 p-4 rounded-2xl bg-blue-50 text-blue-700"><i class="fa-solid fa-video mr-2"></i> แนบคลิป: ${p.videoName}</div>`:''}<div class="mt-5 flex gap-5 text-blue-500"><button onclick="likePost(${p.id})" class="hover:text-red-500"><i class="fa-solid fa-heart"></i> ${p.likes}</button><button><i class="fa-solid fa-comment"></i> คอมเมนต์</button></div></article>`).join('') : '<p class="text-blue-600">ยังไม่มีโพสต์</p>';
+    }
+    function likePost(id){ const posts = store.posts.map(p => p.id===id ? {...p, likes:p.likes+1} : p); store.posts = posts; renderPosts(); }
+
+    function renderTutorRoom(){
+      const a = currentAccount();
+      if(!a) { $('tutorStatusCard').innerHTML = '<p class="text-blue-700">กรุณาเข้าสู่ระบบก่อนตั้งค่าติวเตอร์</p>'; return; }
+      if(a.role !== 'tutor') { $('tutorStatusCard').innerHTML = '<p class="text-red-600 font-bold">บัญชีนี้ไม่ใช่บทบาทติวเตอร์ กรุณาสมัครหรือเข้าสู่ระบบด้วยบัญชีติวเตอร์</p>'; return; }
+      $('tutorOpen').checked = !!a.tutor.open; document.querySelectorAll('[name=teachGrade]').forEach(c => c.checked = a.tutor.grades.includes(c.value)); document.querySelectorAll('[name=teachSubject]').forEach(c => c.checked = a.tutor.subjects.includes(c.value)); $('teachMode').value = a.tutor.mode || 'ออนไลน์'; renderTutorStatus(a);
+    }
+    function saveTutorSettings(e){
+      e.preventDefault(); const a = currentAccount(); if(!a || a.role !== 'tutor') return alert('ต้องเป็นบัญชีติวเตอร์ก่อน');
+      const accounts = store.accounts; const i = accounts.findIndex(x => x.id === a.id);
+      accounts[i].tutor = { open:$('tutorOpen').checked, grades:[...document.querySelectorAll('[name=teachGrade]:checked')].map(x=>x.value), subjects:[...document.querySelectorAll('[name=teachSubject]:checked')].map(x=>x.value), mode:$('teachMode').value };
+      store.accounts = accounts; renderTutorStatus(accounts[i]); renderDeveloper(); alert('บันทึกข้อมูลการสอนแล้ว');
+    }
+    function renderTutorStatus(a){
+      const summary = tutorRatingSummary(a.id);
+      const latest = tutorReviews(a.id).slice(0, 3);
+      $('tutorStatusCard').innerHTML = `<div class="p-5 rounded-3xl bg-white border border-blue-100"><p class="text-sm text-blue-500">สถานะ</p><p class="text-2xl font-extrabold ${a.tutor.open?'text-emerald-600':'text-slate-500'}">${a.tutor.open?'เปิดสอน':'ปิดสอน'}</p><hr class="my-4"><p><b>ระดับชั้น:</b> ${a.tutor.grades.join(', ') || '-'}</p><p class="mt-2"><b>รายวิชา:</b> ${a.tutor.subjects.join(', ') || '-'}</p><p class="mt-2"><b>รูปแบบ:</b> ${a.tutor.mode || '-'}</p><div class="mt-4 p-4 rounded-2xl bg-amber-50 border border-amber-100"><p class="font-extrabold text-amber-700">${ratingStars(summary.avg)} ${summary.avg ? summary.avg.toFixed(1) : 'ยังไม่มีคะแนน'} / 5</p><p class="text-sm text-amber-700">จาก ${summary.count} รีวิว</p></div>${latest.length?`<div class="mt-4 space-y-2"><h4 class="font-extrabold text-blue-900">รีวิวล่าสุด</h4>${latest.map(r=>`<div class="p-3 rounded-2xl bg-blue-50 border border-blue-100"><p class="font-bold text-blue-900">${ratingStars(r.rating)} ${r.rating}/5 โดย ${escapeHtml(r.reviewer)}</p><p class="text-sm text-blue-800 mt-1">${escapeHtml(r.text)}</p></div>`).join('')}</div>`:''}</div>`;
+    }
+
+    function tutorReviews(tutorId){ return store.reviews.filter(r => r.tutorId === tutorId).sort((a,b)=>b.id-a.id); }
+    function tutorRatingSummary(tutorId){ const reviews = tutorReviews(tutorId); const count = reviews.length; const avg = count ? reviews.reduce((sum,r)=>sum+Number(r.rating || 0),0)/count : 0; return {avg, count}; }
+    function ratingStars(value){ const rounded = Math.round(Number(value || 0)); return '★★★★★'.split('').map((s,i)=>`<span class="${i<rounded?'text-amber-400':'text-slate-300'}">★</span>`).join(''); }
+    function openReviewModal(tutorId){
+      const me = currentAccount();
+      if(!me) return alert('กรุณาเข้าสู่ระบบก่อนให้คะแนนติวเตอร์');
+      if(isBanned(me)) return alert('บัญชีนี้ถูกแบน ไม่สามารถให้คะแนนได้');
+      if(me.id === tutorId) return alert('ไม่สามารถรีวิวบัญชีติวเตอร์ของตัวเองได้');
+      const tutor = store.accounts.find(a => a.id === tutorId && a.role === 'tutor');
+      if(!tutor) return alert('ไม่พบติวเตอร์นี้ในระบบ');
+      activeReviewTutorId = tutorId;
+      $('reviewTitle').textContent = 'ให้คะแนน ' + tutor.nick;
+      $('reviewHint').textContent = 'รีวิวนี้จะแสดงในหน้าจับคู่ติวเตอร์และแดชบอร์ดผู้พัฒนา';
+      const old = store.reviews.find(r => r.tutorId === tutorId && r.reviewerId === me.id);
+      $('reviewRating').value = old ? String(old.rating) : '';
+      $('reviewText').value = old ? old.text : '';
+      openModal('reviewModal');
+    }
+    function submitReview(e){
+      e.preventDefault();
+      const me = currentAccount();
+      if(!me || !activeReviewTutorId) return alert('กรุณาเลือกติวเตอร์ก่อนให้คะแนน');
+      const rating = Number($('reviewRating').value);
+      const text = $('reviewText').value.trim();
+      if(!rating || rating < 1 || rating > 5 || !text) return alert('กรุณาเลือกคะแนน 1-5 และเขียนรีวิว');
+      const reviews = store.reviews;
+      const existing = reviews.findIndex(r => r.tutorId === activeReviewTutorId && r.reviewerId === me.id);
+      const review = { id: existing >= 0 ? reviews[existing].id : Date.now(), tutorId: activeReviewTutorId, reviewerId: me.id, reviewer: me.nick, rating, text, time: nowThai() };
+      if(existing >= 0) reviews[existing] = review; else reviews.unshift(review);
+      store.reviews = reviews;
+      closeModal('reviewModal'); $('reviewRating').value=''; $('reviewText').value=''; activeReviewTutorId = null;
+      matchTutors(true); renderTutorRoom(); renderDeveloper(); alert('บันทึกรีวิวและคะแนนเรียบร้อย');
+    }
+
+    function matchTutors(silent=false){
+      const subject = $('learnSubject').value; if((!selectedLearnGrade || !subject) && !silent) return alert('กรุณาเลือกระดับชั้นและรายวิชา');
+      const tutors = store.accounts.filter(a => a.role==='tutor' && a.tutor.open && !isBanned(a) && (!selectedLearnGrade || a.tutor.grades.includes(selectedLearnGrade)) && (!subject || a.tutor.subjects.includes(subject)));
+      $('matchResults').innerHTML = tutors.length ? tutors.map(t => {
+        const summary = tutorRatingSummary(t.id);
+        const latest = tutorReviews(t.id).slice(0, 2);
+        return `<article class="card bg-white/95 backdrop-blur rounded-[2rem] p-6 border border-blue-100 shadow-sm"><div class="flex gap-4"><img src="${t.avatar}" class="w-16 h-16 rounded-2xl object-cover"><div><h4 class="text-xl font-extrabold">${t.nick}</h4><p class="text-blue-600">${escapeHtml(t.bio || 'ติวเตอร์ Fairy Tail')}</p><div class="mt-2 text-sm font-bold">${ratingStars(summary.avg)} <span class="text-amber-600">${summary.avg ? summary.avg.toFixed(1) : 'ยังไม่มีคะแนน'}</span> <span class="text-blue-500">(${summary.count} รีวิว)</span></div></div></div><div class="mt-5 flex flex-wrap gap-2">${t.tutor.grades.map(g=>`<span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm">${g}</span>`).join('')}${t.tutor.subjects.map(s=>`<span class="px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-sm">${s}</span>`).join('')}</div><p class="mt-4"><b>รูปแบบ:</b> ${t.tutor.mode}</p>${latest.length?`<div class="mt-4 space-y-2"><h5 class="font-extrabold text-blue-900">รีวิวล่าสุด</h5>${latest.map(r=>`<div class="p-3 rounded-2xl bg-blue-50 border border-blue-100"><p class="font-bold text-blue-900">${ratingStars(r.rating)} ${r.rating}/5 โดย ${escapeHtml(r.reviewer)}</p><p class="text-sm text-blue-800 mt-1">${escapeHtml(r.text)}</p></div>`).join('')}</div>`:''}<div class="mt-5 grid sm:grid-cols-2 gap-3"><button onclick="startChat(${t.id})" class="py-3 rounded-2xl bg-blue-600 text-white font-bold">แชทเพื่อตกลงการสอน</button><button onclick="openReviewModal(${t.id})" class="py-3 rounded-2xl bg-amber-500 text-white font-bold">ให้คะแนน/รีวิว</button></div></article>`;
+      }).join('') : '<div class="p-8 rounded-[2rem] bg-white border border-blue-100 text-blue-700">ยังไม่พบติวเตอร์ที่ตรงเงื่อนไข ลองเปลี่ยนวิชาหรือระดับชั้น</div>';
+    }
+    function startChat(tutorId){
+      const me = currentAccount(); if(!me) return alert('กรุณาเข้าสู่ระบบก่อนเริ่มแชท');
+      activeChatWith = tutorId; const t = store.accounts.find(a=>a.id===tutorId); $('chatTitle').textContent = 'แชทกับ ' + t.nick;
+      const accounts = store.accounts; const i = accounts.findIndex(a=>a.id===tutorId); if(i>=0){ accounts[i].contacts = (accounts[i].contacts||0)+1; store.accounts = accounts; }
+      renderChat(); openModal('chatModal');
+    }
+    function chatKey(){ const me = currentAccount(); return [me.id, activeChatWith].sort().join('_'); }
+    function renderChat(){
+      const me = currentAccount(); const chats = store.chats; const list = chats[chatKey()] || [];
+      $('chatBox').innerHTML = list.length ? list.map(m => `<div class="mb-3 flex ${m.from===me.id?'justify-end':'justify-start'}"><div class="max-w-[75%] px-4 py-3 rounded-3xl ${m.from===me.id?'bg-blue-600 text-white rounded-tr-none':'bg-white text-blue-900 rounded-tl-none'}"><p>${m.text}</p><p class="text-[10px] opacity-70 mt-1">${m.time}</p></div></div>`).join('') : '<p class="text-blue-600 text-center mt-20">ยังไม่มีข้อความ เริ่มคุยเพื่อตกลงเรียนได้เลย</p>';
+      $('chatBox').scrollTop = $('chatBox').scrollHeight;
+    }
+    function sendChat(e){
+      e.preventDefault(); const me = currentAccount(); const text = $('chatInput').value.trim(); if(!text) return;
+      const chats = store.chats; const key = chatKey(); chats[key] = chats[key] || []; chats[key].push({from:me.id, text, time:nowThai()}); store.chats = chats; $('chatInput').value=''; renderChat();
+    }
+
+    function developerLogin(){
+      const a = currentAccount();
+      if(!a){ alert('กรุณาเข้าสู่ระบบด้วยบัญชีผู้พัฒนาก่อน'); openModal('loginModal'); return; }
+      if(isBanned(a)) return alert('บัญชีนี้ถูกแบนถึงวันที่ ' + new Date(a.banUntil).toLocaleDateString('th-TH'));
+      if(a.role !== 'developer') return alert('บัญชีนี้ไม่ใช่บทบาทผู้พัฒนา กรุณาเข้าสู่ระบบด้วยบัญชีผู้พัฒนา');
+      if($('devAccessCode') && $('devAccessCode').value.trim() !== DEVELOPER_SECRET_CODE) return alert('รหัสลับผู้พัฒนาไม่ถูกต้อง');
+      if($('devAccessCode')) $('devAccessCode').value = '';
+      $('devLocked').classList.add('hidden'); $('devPanel').classList.remove('hidden'); renderDeveloper();
+    }
+    function renderDeveloper(){
+      const dev = currentAccount();
+      const allowed = dev && dev.role === 'developer' && !isBanned(dev);
+      if(!allowed){
+        $('devPanel').classList.add('hidden'); $('devLocked').classList.remove('hidden');
+        if($('devAccountHint')){
+          $('devAccountHint').innerHTML = dev ? `กำลังใช้บัญชี <b>${dev.nick}</b> (${roleText(dev.role)}) ซึ่งยังไม่มีสิทธิ์ผู้พัฒนา` : 'กรุณาเข้าสู่ระบบด้วยบัญชีผู้พัฒนาก่อนเข้าแดชบอร์ด';
+        }
+        return;
+      }
+      $('devLocked').classList.add('hidden'); $('devPanel').classList.remove('hidden');
+      const accounts = store.accounts, posts = store.posts, reviews = store.reviews, tutors = accounts.filter(a=>a.role==='tutor'), openTutors = tutors.filter(a=>a.tutor.open), chats = Object.values(store.chats).reduce((sum,arr)=>sum+arr.length,0);
+      const cards = [['บัญชีทั้งหมด',accounts.length,'fa-users'],['ติวเตอร์เปิดสอน',openTutors.length,'fa-chalkboard-user'],['โพสต์ทั้งหมด',posts.length,'fa-newspaper'],['รีวิวทั้งหมด',reviews.length,'fa-star'],['ข้อความแชทรวม',chats,'fa-comments'],['บัญชีถูกแบน',accounts.filter(isBanned).length,'fa-ban']];
+      $('insights').innerHTML = cards.map(c => `<div class="bg-white rounded-3xl p-5 border border-blue-100 shadow-sm"><i class="fa-solid ${c[2]} text-blue-600 text-2xl"></i><p class="text-sm text-blue-500 mt-3">${c[0]}</p><p class="text-3xl font-extrabold text-blue-900">${c[1]}</p></div>`).join('');
+      $('accountTable').innerHTML = accounts.length ? accounts.map(a => `<tr class="border-t border-blue-50"><td class="p-4">${a.first} ${a.last}</td><td class="p-4"><div class="flex items-center gap-2"><img src="${a.avatar}" class="w-9 h-9 rounded-xl">${a.nick}</div></td><td class="p-4">${roleText(a.role)}</td><td class="p-4">${a.grade}</td><td class="p-4">${isBanned(a)?'<span class="text-red-600 font-bold">แบนอยู่</span>':'<span class="text-emerald-600 font-bold">ปกติ</span>'}</td><td class="p-4"><button onclick="banAccount(${a.id})" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 font-bold">แบน 1-30 วัน</button> <button onclick="unbanAccount(${a.id})" class="px-3 py-2 rounded-xl bg-blue-50 text-blue-600 font-bold">ปลดแบน</button></td></tr>`).join('') : '<tr><td class="p-4 text-blue-600" colspan="6">ยังไม่มีบัญชี</td></tr>';
+      if($('postTable')) $('postTable').innerHTML = posts.length ? posts.map(p => `<tr class="border-t border-blue-50"><td class="p-4"><div class="flex items-center gap-2"><img src="${p.avatar}" class="w-9 h-9 rounded-xl">${p.author}</div></td><td class="p-4 max-w-md"><div class="line-clamp-3 whitespace-pre-line text-blue-950">${p.text}</div>${p.videoName?`<div class="mt-2 text-xs text-blue-600"><i class="fa-solid fa-video mr-1"></i>${p.videoName}</div>`:''}</td><td class="p-4 text-blue-700">${p.time}</td><td class="p-4">${p.promote?'<span class="text-amber-600 font-bold">โปรโมท</span>':'<span class="text-slate-500">ทั่วไป</span>'}</td><td class="p-4"><button onclick="deletePostByDeveloper(${p.id})" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 font-bold">ลบโพสต์</button></td></tr>`).join('') : '<tr><td class="p-4 text-blue-600" colspan="5">ยังไม่มีโพสต์</td></tr>';
+      if($('reviewTable')) $('reviewTable').innerHTML = reviews.length ? reviews.map(r => { const tutor = accounts.find(a=>a.id===r.tutorId); return `<tr class="border-t border-blue-50"><td class="p-4">${tutor ? `<div class="flex items-center gap-2"><img src="${tutor.avatar}" class="w-9 h-9 rounded-xl">${tutor.nick}</div>` : '<span class="text-slate-500">ไม่พบบัญชีติวเตอร์</span>'}</td><td class="p-4">${escapeHtml(r.reviewer)}</td><td class="p-4"><span class="font-bold text-amber-600">${ratingStars(r.rating)} ${r.rating}/5</span></td><td class="p-4 max-w-md whitespace-pre-line text-blue-950">${escapeHtml(r.text)}</td><td class="p-4 text-blue-700">${r.time}</td><td class="p-4"><button onclick="deleteReviewByDeveloper(${r.id})" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 font-bold">ลบรีวิว</button></td></tr>`; }).join('') : '<tr><td class="p-4 text-blue-600" colspan="6">ยังไม่มีรีวิว</td></tr>';
+    }
+    function banAccount(id){ const days = Number(prompt('ต้องการแบนกี่วัน? ใส่ 1-30')); if(!days || days<1 || days>30) return alert('กรุณาใส่จำนวน 1-30 วัน'); const accounts = store.accounts; const i = accounts.findIndex(a=>a.id===id); accounts[i].banUntil = new Date(Date.now()+days*86400000).toISOString(); store.accounts = accounts; renderDeveloper(); alert('แบนบัญชีเรียบร้อย'); }
+    function unbanAccount(id){ const accounts = store.accounts; const i = accounts.findIndex(a=>a.id===id); accounts[i].banUntil = null; store.accounts = accounts; renderDeveloper(); }
+    function deletePostByDeveloper(id){ const dev = currentAccount(); if(!dev || dev.role !== 'developer' || isBanned(dev)) return alert('ต้องเข้าสู่ระบบด้วยบัญชีผู้พัฒนาก่อน'); if(!confirm('ต้องการลบโพสต์นี้ออกจากชุมชนใช่ไหม?')) return; store.posts = store.posts.filter(p => p.id !== id); renderPosts(); renderDeveloper(); alert('ลบโพสต์เรียบร้อย'); }
+    function deleteReviewByDeveloper(id){ const dev = currentAccount(); if(!dev || dev.role !== 'developer' || isBanned(dev)) return alert('ต้องเข้าสู่ระบบด้วยบัญชีผู้พัฒนาก่อน'); if(!confirm('ต้องการลบรีวิวนี้ออกจากระบบใช่ไหม?')) return; store.reviews = store.reviews.filter(r => r.id !== id); matchTutors(true); renderTutorRoom(); renderDeveloper(); alert('ลบรีวิวเรียบร้อย'); }
+
+    function cleanLegacyStarterData(){
+      // ล้างข้อมูลเริ่มต้นจากเวอร์ชันก่อนหน้าโดยอ้างอิงเลขระบบภายในเท่านั้น เพื่อไม่ให้มีรายชื่อทดสอบอยู่ในไฟล์
+      const legacyAccountIds = new Set([101, 102, 103]);
+      const legacyPostIds = new Set([201, 202]);
+      const beforeAccounts = store.accounts;
+      const filteredAccounts = beforeAccounts.filter(a => !legacyAccountIds.has(a.id));
+      if(filteredAccounts.length !== beforeAccounts.length) store.accounts = filteredAccounts;
+
+      const beforePosts = store.posts;
+      const filteredPosts = beforePosts.filter(p => !legacyAccountIds.has(p.authorId) && !legacyPostIds.has(p.id));
+      if(filteredPosts.length !== beforePosts.length) store.posts = filteredPosts;
+
+      const current = store.current;
+      if(current && legacyAccountIds.has(current.id)) store.current = null;
+    }
+    function renderAll(){ renderAuth(); renderPosts(); renderTutorRoom(); renderDeveloper(); }
+    init();
+    
+  </script>
+</body>
+</html>
