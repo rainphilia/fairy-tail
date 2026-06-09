@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fairy Tail - ปีกแห่งความรู้</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&amp;display=swap');
+        
+        body {
+            font-family: 'Noto Sans Thai', system-ui, sans-serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg::before {
+            content: '🦋';
+            position: absolute;
+            font-size: 500px;
+            opacity: 0.08;
+            top: -150px;
+            right: -150px;
+            transform: rotate(20deg);
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(20deg) translate(0, 0); }
+            50% { transform: rotate(25deg) translate(30px, -30px); }
+            100% { transform: rotate(20deg) translate(0, 0); }
+        }
+        
+        .butterfly {
+            position: relative;
+        }
+        
+        .butterfly::after {
+            content: '🦋';
+            position: absolute;
+            font-size: 48px;
+            opacity: 0.2;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: wingFlap 4s infinite ease-in-out;
+        }
+        
+        @keyframes wingFlap {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.15); }
+        }
+        
+        .nav-active {
+            border-bottom: 4px solid #a5b4fc;
+            color: #4338ca;
+            font-weight: 700;
+        }
+        
+        .post-card {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .post-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgb(79 70 229 / 0.2);
+        }
+        
+        .modal {
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.8) translateY(40px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .tutor-card {
+            transition: all 0.3s ease;
+        }
+        
+        .message-bubble {
+            max-width: 75%;
+            padding: 14px 20px;
+            border-radius: 20px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #64748b;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 rounded-3xl flex items-center justify-center text-white text-5xl shadow-xl butterfly">🧚</div>
+                <div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">Fairy Tail</h1>
+                    <p class="text-xs text-slate-500 -mt-1">ปีกผีเสื้อแห่งความรู้</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-base font-medium">
+                <a href="#" onclick="showSection('home')" class="nav-link nav-active hover:text-violet-600 transition-colors">หน้าแรก</a>
+                <a href="#" onclick="showSection('match')" class="nav-link hover:text-violet-600 transition-colors">หาติวเตอร์</a>
+                <a href="#" onclick="showSection('posts')" class="nav-link hover:text-violet-600 transition-colors">ชุมชน</a>
+                <a href="#" onclick="showSection('roles')" class="nav-link hover:text-violet-600 transition-colors">บทบาท</a>
+            </div>
+            
+            <div class="flex items-center gap-3" id="auth-buttons">
+                <button onclick="toggleLoginModal()" 
+                        class="px-6 py-2.5 text-sm md:text-base border border-violet-600 text-violet-600 hover:bg-violet-50 rounded-3xl font-medium transition-all">
+                    เข้าสู่ระบบ
+                </button>
+                <button onclick="showRegisterModal()" 
+                        class="px-6 py-2.5 text-sm md:text-base bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110 rounded-3xl font-medium transition-all">
+                    สมัครสมาชิก
+                </button>
+                <button onclick="developerLogin()" 
+                        class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-3xl flex items-center gap-2 text-xs md:text-sm">
+                    <i class="fas fa-crown"></i> 
+                    <span class="hidden md:inline">ผู้พัฒนา</span>
+                </button>
+            </div>
+            
+            <div id="user-profile" class="hidden items-center gap-3">
+                <div onclick="showProfileModal()" class="flex items-center gap-3 cursor-pointer group">
+                    <div id="nav-avatar" 
+                         class="w-10 h-10 rounded-3xl bg-cover border-2 border-white shadow-md ring-2 ring-violet-200"></div>
+                    <div class="hidden md:block">
+                        <p id="nav-username" class="font-semibold text-sm"></p>
+                        <p id="nav-role" class="text-xs text-slate-500"></p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-500 p-2">
+                    <i class="fas fa-sign-out-alt text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home" class="hero-bg text-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6 text-center relative">
+            <div class="text-8xl mb-6 animate-bounce">🦋</div>
+            <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Fairy Tail<br>ติวเตอร์ฟรีด้วยปีกผีเสื้อ</h2>
+            <p class="text-xl md:text-2xl mb-12 max-w-2xl mx-auto text-indigo-100">
+                ชุมชนนักเรียนมัธยมที่ช่วยเหลือกัน ด้วยใจและปีกแห่งความรู้
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <button onclick="showSection('match')" 
+                        class="px-10 py-6 bg-white text-violet-700 rounded-3xl font-bold text-xl hover:scale-105 transition-all shadow-2xl flex items-center justify-center gap-3">
+                    <span class="text-3xl">🪶</span> หาติวเตอร์ฟรี
+                </button>
+                <button onclick="showSection('posts')" 
+                        class="px-10 py-6 border-2 border-white text-white rounded-3xl font-bold text-xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+                    <i class="fas fa-users text-2xl"></i> เข้าชุมชน
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roles -->
+    <section id="roles" class="py-20 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl font-bold text-center mb-16 text-violet-700">บทบาทใน Fairy Tail 🦋</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Developer -->
+                <div class="text-center bg-gradient-to-br from-amber-50 to-yellow-100 p-10 rounded-3xl border border-amber-200 hover:border-amber-400 transition-all group">
+                    <div class="text-7xl mb-6">👑</div>
+                    <h3 class="text-3xl font-bold mb-3 text-amber-800">ผู้พัฒนา</h3>
+                    <p class="text-slate-600 mb-8">ผู้สร้างและดูแลระบบ Fairy Tail</p>
+                    <ul class="text-left text-sm space-y-2 mb-8 text-amber-700">
+                        <li class="flex gap-2"><span class="text-emerald-500">✓</span> จัดการผู้ใช้ทั้งหมด</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">✓</span> ควบคุมเนื้อหา</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">✓</span> ระบบสถิติ</li>
+                    </ul>
+                    <button onclick="developerLogin()" 
+                            class="w-full py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-3xl font-semibold">
+                        เข้าสู่ระบบผู้พัฒนา
+                    </button>
+                </div>
+                
+                <!-- Tutor -->
+                <div class="text-center bg-gradient-to-br from-emerald-50 to-teal-100 p-10 rounded-3xl border border-emerald-200 hover:border-emerald-400 transition-all group">
+                    <div class="text-7xl mb-6">📚</div>
+                    <h3 class="text-3xl font-bold mb-3 text-emerald-800">ติวเตอร์</h3>
+                    <p class="text-slate-600 mb-8">ผู้ให้ปีกแห่งความรู้ฟรี</p>
+                    <button onclick="switchRole('tutor')" 
+                            class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-3xl font-semibold">
+                        เข้าสู่ระบบติวเตอร์
+                    </button>
+                </div>
+                
+                <!-- Student -->
+                <div class="text-center bg-gradient-to-br from-violet-50 to-purple-100 p-10 rounded-3xl border border-violet-200 hover:border-violet-400 transition-all group">
+                    <div class="text-7xl mb-6">🎓</div>
+                    <h3 class="text-3xl font-bold mb-3 text-violet-800">ผู้เรียน</h3>
+                    <p class="text-slate-600 mb-8">รับปีกใหม่สู่ความสำเร็จ</p>
+                    <button onclick="switchRole('student')" 
+                            class="w-full py-4 bg-violet-600 hover:bg-violet-700 text-white rounded-3xl font-semibold">
+                        เข้าสู่ระบบผู้เรียน
+                    </button>
+                </div>
+                
+                <!-- Member -->
+                <div class="text-center bg-gradient-to-br from-blue-50 to-sky-100 p-10 rounded-3xl border border-blue-200 hover:border-blue-400 transition-all group">
+                    <div class="text-7xl mb-6">🧚</div>
+                    <h3 class="text-3xl font-bold mb-3 text-blue-800">สมาชิกทั่วไป</h3>
+                    <p class="text-slate-600 mb-8">ร่วมปีกกับชุมชน</p>
+                    <button onclick="showRegisterModal()" 
+                            class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-3xl font-semibold">
+                        สมัครสมาชิก
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Matching -->
+    <section id="match" class="py-20 bg-slate-50 hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-10 md:p-12">
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-3xl text-6xl mb-6">🦋</div>
+                    <h2 class="text-4xl font-bold mb-3">จับคู่ติวเตอร์ฟรี</h2>
+                    <p class="text-emerald-600 font-medium">ทุกการสอนฟรี 100%</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div>
+                        <label class="block text-lg font-semibold mb-4 text-slate-700">ระดับชั้น</label>
+                        <div class="grid grid-cols-3 gap-3" id="grade-options"></div>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-semibold mb-4 text-slate-700">วิชา</label>
+                        <select id="subject-select" 
+                                class="w-full p-5 border border-slate-200 rounded-3xl focus:outline-none focus:border-violet-500 text-lg">
+                            <option value="">เลือกวิชา</option>
+                            <option value="คณิตศาสตร์">คณิตศาสตร์</option>
+                            <option value="ฟิสิกส์">ฟิสิกส์</option>
+                            <option value="เคมี">เคมี</option>
+                            <option value="ชีววิทยา">ชีววิทยา</option>
+                            <option value="ภาษาอังกฤษ">ภาษาอังกฤษ</option>
+                            <option value="ภาษาไทย">ภาษาไทย</option>
+                            <option value="สังคมศึกษา">สังคมศึกษา</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="findTutor()" 
+                        class="mt-12 w-full py-7 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-2xl font-bold rounded-3xl hover:scale-[1.02] transition-all flex items-center justify-center gap-4 shadow-lg">
+                    <span class="text-3xl">🔍</span> 
+                    จับคู่ปีกผีเสื้อ
+                </button>
+            </div>
+            
+            <!-- Results -->
+            <div id="match-results" class="hidden mt-16">
+                <h3 class="text-3xl font-bold text-center mb-10 text-violet-700">ติวเตอร์ที่ตรงใจ 🦋</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="tutor-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Posts -->
+    <section id="posts" class="py-20 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+                <h2 class="text-4xl font-bold flex items-center gap-3">
+                    ชุมชน Fairy Tail 
+                    <span class="text-5xl">🦋</span>
+                </h2>
+                <button onclick="createPostModal()" 
+                        class="flex items-center gap-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-8 py-4 rounded-3xl font-medium text-lg hover:shadow-xl transition-all">
+                    <i class="fas fa-feather-alt"></i> 
+                    โพสต์ใหม่
+                </button>
+            </div>
+            
+            <div id="post-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Chat Modal -->
+    <div id="chat-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
+        <div class="bg-white w-full max-w-2xl rounded-3xl modal overflow-hidden">
+            <div class="flex items-center justify-between border-b px-8 py-5 bg-gradient-to-r from-violet-50 to-indigo-50">
+                <div class="flex items-center gap-4">
+                    <div id="chat-avatar" class="w-14 h-14 rounded-3xl bg-cover ring-4 ring-white shadow"></div>
+                    <div>
+                        <h3 id="chat-tutor-name" class="font-bold text-2xl"></h3>
+                        <p class="text-emerald-600 text-sm flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i> ออนไลน์
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeChat()" class="text-4xl text-slate-300 hover:text-red-500 transition-colors">×</button>
+            </div>
+            
+            <div id="chat-messages" 
+                 class="h-96 p-8 overflow-y-auto bg-slate-50 scrollbar-thin space-y-6"></div>
+            
+            <div class="p-6 border-t flex gap-3 bg-white">
+                <input id="chat-input" type="text" placeholder="พิมพ์ข้อความที่นี่..." 
+                       class="flex-1 border border-slate-200 rounded-3xl px-6 py-4 focus:outline-none focus:border-violet-500 text-base">
+                <button onclick="sendMessage()" 
+                        class="px-10 bg-violet-600 hover:bg-violet-700 text-white rounded-3xl font-semibold transition-colors">
+                    ส่ง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[110]">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full modal">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-bold">โปรไฟล์</h3>
+                <button onclick="closeProfileModal()" class="text-4xl text-slate-300">×</button>
+            </div>
+            <div class="flex flex-col items-center">
+                <div id="profile-avatar" class="w-32 h-32 rounded-3xl bg-cover border-4 border-violet-200 mb-6"></div>
+                <h4 id="profile-name" class="text-2xl font-bold mb-1"></h4>
+                <p id="profile-role" class="text-slate-500 mb-8"></p>
+                
+                <div class="w-full space-y-4">
+                    <div class="flex justify-between py-3 border-b">
+                        <span class="text-slate-500">อีเมล</span>
+                        <span id="profile-email" class="font-medium"></span>
+                    </div>
+                    <div class="flex justify-between py-3 border-b">
+                        <span class="text-slate-500">บทบาท</span>
+                        <span id="profile-role-detail" class="font-medium text-emerald-600"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="logout(); closeProfileModal();" 
+                    class="mt-10 w-full py-4 text-red-600 border border-red-200 hover:bg-red-50 rounded-3xl">
+                ออกจากระบบ
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Data persistence with localStorage
+        let currentUser = null;
+        let posts = [];
+        let selectedGrade = null;
+        let messages = {}; // tutorId -> array of messages
+        
+        const sampleTutors = [
+            { 
+                id: 1, 
+                name: "ครูสมหญิง", 
+                subject: "คณิตศาสตร์", 
+                grade: "ม.4-6", 
+                avatar: "https://picsum.photos/id/64/300/300", 
+                bio: "สอนคณิตศาสตร์ให้เข้าใจลึกซึ้งด้วยตัวอย่างชีวิตจริง" 
+            },
+            { 
+                id: 2, 
+                name: "ครูธนากร", 
+                subject: "ฟิสิกส์", 
+                grade: "ม.5-6", 
+                avatar: "https://picsum.photos/id/201/300/300", 
+                bio: "ผู้เชี่ยวชาญฟิสิกส์ระดับมัธยมปลาย" 
+            },
+            { 
+                id: 3, 
+                name: "ครูปิยาภรณ์", 
+                subject: "ภาษาอังกฤษ", 
+                grade: "ม.1-6", 
+                avatar: "https://picsum.photos/id/1027/300/300", 
+                bio: "ทำให้การเรียนภาษาอังกฤษสนุกเหมือนเล่นเกม" 
+            }
+        ];
+        
+        // Load data from localStorage
+        function loadData() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+            
+            const savedPosts = localStorage.getItem('posts');
+            if (savedPosts) {
+                posts = JSON.parse(savedPosts);
+            } else {
+                // Sample posts
+                posts = [
+                    {
+                        id: 1,
+                        author: "น้องมิ้นท์",
+                        avatar: "https://picsum.photos/id/64/80",
+                        time: "2 ชั่วโมงที่ผ่านมา",
+                        content: "ใครมีเทคนิคทำโจทย์ฟิสิกส์เรื่องกลศาสตร์บ้างคะ? 🦋",
+                        likes: 12
+                    },
+                    {
+                        id: 2,
+                        author: "พี่โอม",
+                        avatar: "https://picsum.photos/id/201/80",
+                        time: "5 ชั่วโมงที่ผ่านมา",
+                        content: "สรุปสูตรคณิตศาสตร์ม.6 สำหรับสอบ O-NET มาแชร์ให้ทุกคนแล้วนะครับ",
+                        likes: 28
+                    }
+                ];
+                savePosts();
+            }
+        }
+        
+        function saveData() {
+            if (currentUser) localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        
+        function savePosts() {
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+        
+        function showSection(section) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            const target = document.getElementById(section);
+            if (target) target.classList.remove('hidden');
+            
+            if (section === 'posts') loadPosts();
+            if (section === 'match') populateGrades();
+        }
+        
+        function populateGrades() {
+            const container = document.getElementById('grade-options');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                const div = document.createElement('div');
+                div.className = `px-5 py-6 border-2 rounded-3xl text-center cursor-pointer font-semibold transition-all text-sm md:text-base ${selectedGrade === i ? 'border-violet-500 bg-violet-50 text-violet-700 shadow' : 'border-slate-200 hover:border-violet-300'}`;
+                div.textContent = `ม.${i}`;
+                div.onclick = () => {
+                    selectedGrade = i;
+                    populateGrades();
+                };
+                container.appendChild(div);
+            }
+        }
+        
+        function findTutor() {
+            const subject = document.getElementById('subject-select').value;
+            if (!selectedGrade || !subject) {
+                alert("กรุณาเลือกระดับชั้นและวิชา 🦋");
+                return;
+            }
+            
+            document.getElementById('match-results').classList.remove('hidden');
+            const container = document.getElementById('tutor-list');
+            container.innerHTML = '';
+            
+            sampleTutors.forEach(tutor => {
+                const card = document.createElement('div');
+                card.className = 'tutor-card bg-white rounded-3xl overflow-hidden shadow hover:shadow-2xl border border-slate-100';
+                card.innerHTML = `
+                    <div class="h-2 bg-gradient-to-r from-violet-400 to-indigo-500"></div>
+                    <div class="p-8">
+                        <img src="${tutor.avatar}" class="w-24 h-24 rounded-3xl mx-auto mb-6 object-cover ring-4 ring-violet-100">
+                        <h4 class="text-center font-bold text-2xl mb-1">${tutor.name}</h4>
+                        <p class="text-center text-violet-600 font-medium">${tutor.subject}</p>
+                        <p class="text-center text-sm text-slate-500 mt-4 line-clamp-3">${tutor.bio}</p>
+                        
+                        <div class="flex justify-center mt-6">
+                            <span class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-5 py-1.5 rounded-3xl text-sm">
+                                <i class="fas fa-check"></i> ฟรี
+                            </span>
+                        </div>
+                        
+                        <button onclick="startChat(${tutor.id}, '${tutor.name}', '${tutor.avatar}')" 
+                                class="mt-8 w-full py-5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-3xl font-semibold hover:brightness-105 transition">
+                            เริ่มสนทนา
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function startChat(id, name, avatar) {
+            document.getElementById('chat-modal').classList.remove('hidden');
+            document.getElementById('chat-tutor-name').textContent = name;
+            document.getElementById('chat-avatar').style.backgroundImage = `url('${avatar}')`;
+            
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.innerHTML = `
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-3xl bg-cover flex-shrink-0" style="background-image: url('${avatar}')"></div>
+                    <div class="message-bubble bg-white border">สวัสดีค่ะ/ครับ! ฉันยินดีช่วยสอนฟรีนะคะ 🦋</div>
+                </div>
+            `;
+            
+            // Load previous messages if any
+            if (messages[id]) {
+                messages[id].forEach(msg => {
+                    addMessageToUI(msg.text, msg.isMine);
+                });
+            }
+        }
+        
+        function addMessageToUI(text, isMine) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isMine ? 'flex justify-end' : 'flex gap-4';
+            
+            if (isMine) {
+                msgDiv.innerHTML = `<div class="message-bubble bg-violet-600 text-white">${text}</div>`;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-3xl bg-cover flex-shrink-0" style="background-image: url('${document.getElementById('chat-avatar').style.backgroundImage.slice(5, -2)}')"></div>
+                    <div class="message-bubble bg-white">${text}</div>
+                `;
+            }
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            if (!input.value.trim()) return;
+            
+            const text = input.value.trim();
+            addMessageToUI(text, true);
+            
+            // Save message
+            const tutorName = document.getElementById('chat-tutor-name').textContent;
+            const tutorId = sampleTutors.find(t => t.name === tutorName)?.id;
+            
+            if (!messages[tutorId]) messages[tutorId] = [];
+            messages[tutorId].push({ text, isMine: true, time: new Date() });
+            
+            input.value = '';
+            
+            // Simulate reply after 1.5s
+            setTimeout(() => {
+                const replies = ["เข้าใจแล้วค่ะ!", "มีคำถามเพิ่มเติมไหมคะ?", "ลองทำโจทย์ข้อนี้ดูนะคะ 🦋"];
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+                addMessageToUI(reply, false);
+                
+                if (!messages[tutorId]) messages[tutorId] = [];
+                messages[tutorId].push({ text: reply, isMine: false, time: new Date() });
+            }, 1500);
+        }
+        
+        function closeChat() {
+            document.getElementById('chat-modal').classList.add('hidden');
+        }
+        
+        function toggleLoginModal() {
+            let modal = document.getElementById('login-modal');
+            if (!modal) {
+                createLoginModal();
+                modal = document.getElementById('login-modal');
+            }
+            modal.classList.toggle('hidden');
+        }
+        
+        function showRegisterModal() {
+            let modal = document.getElementById('register-modal');
+            if (!modal) {
+                createRegisterModal();
+                modal = document.getElementById('register-modal');
+            }
+            modal.classList.remove('hidden');
+            
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.classList.add('hidden');
+        }
+        
+        function createLoginModal() {
+            const modalHTML = `
+                <div id="login-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[120]">
+                    <div class="bg-white rounded-3xl p-10 w-full max-w-md modal">
+                        <h3 class="text-3xl font-bold text-center mb-8 text-violet-700">🦋 เข้าสู่ระบบ</h3>
+                        <input id="login-email" type="email" placeholder="อีเมลหรือชื่อผู้ใช้" 
+                               class="w-full p-4 border border-slate-200 rounded-3xl mb-4 focus:outline-none focus:border-violet-400">
+                        <input id="login-password" type="password" placeholder="รหัสผ่าน" 
+                               class="w-full p-4 border border-slate-200 rounded-3xl mb-8 focus:outline-none focus:border-violet-400">
+                        <button onclick="fakeLogin()" 
+                                class="w-full py-4 bg-violet-600 text-white rounded-3xl font-semibold hover:bg-violet-700">
+                            เข้าสู่ระบบ
+                        </button>
+                        <p class="text-center text-sm text-slate-500 mt-6">
+                            ยังไม่มีบัญชี? <span onclick="showRegisterModal()" class="text-violet-600 cursor-pointer hover:underline">สมัครสมาชิก</span>
+                        </p>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function createRegisterModal() {
+            const modalHTML = `
+                <div id="register-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[120]">
+                    <div class="bg-white rounded-3xl p-10 w-full max-w-md modal">
+                        <h3 class="text-3xl font-bold text-center mb-8 text-violet-700">🦋 สมัครสมาชิก</h3>
+                        <select id="role-select" class="w-full p-4 border border-slate-200 rounded-3xl mb-4 focus:outline-none">
+                            <option value="student">ผู้เรียน</option>
+                            <option value="tutor">ติวเตอร์</option>
+                        </select>
+                        <input id="reg-name" type="text" placeholder="ชื่อ-นามสกุล" 
+                               class="w-full p-4 border border-slate-200 rounded-3xl mb-4 focus:outline-none">
+                        <input id="reg-email" type="email" placeholder="อีเมล" 
+                               class="w-full p-4 border border-slate-200 rounded-3xl mb-8 focus:outline-none">
+                        <button onclick="fakeRegister()" 
+                                class="w-full py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-3xl font-semibold">
+                            สมัครสมาชิกฟรี
+                        </button>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function fakeLogin() {
+            currentUser = { 
+                name: "น้องแฟรี่", 
+                email: "user@fairy.com", 
+                role: "student", 
+                avatar: "https://picsum.photos/id/64/300/300" 
+            };
+            updateAuthUI();
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.classList.add('hidden');
+            alert("🦋 เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับสู่ Fairy Tail");
+        }
+        
+        function fakeRegister() {
+            const name = document.getElementById('reg-name').value.trim() || "สมาชิก Fairy";
+            const role = document.getElementById('role-select').value;
+            
+            currentUser = { 
+                name: name, 
+                email: document.getElementById('reg-email').value || "new@fairy.com", 
+                role: role, 
+                avatar: "https://picsum.photos/id/" + (Math.floor(Math.random()*100)+200) + "/300/300" 
+            };
+            
+            updateAuthUI();
+            const regModal = document.getElementById('register-modal');
+            if (regModal) regModal.classList.add('hidden');
+            alert("🦋 สมัครสมาชิกสำเร็จแล้ว! คุณพร้อมบินด้วยปีกแห่งความรู้");
+        }
+        
+        function updateAuthUI() {
+            document.getElementById('auth-buttons').classList.add('hidden');
+            document.getElementById('user-profile').classList.remove('hidden');
+            
+            document.getElementById('nav-username').textContent = currentUser.name;
+            document.getElementById('nav-role').textContent = currentUser.role === 'tutor' ? 'ติวเตอร์' : 
+                                                             currentUser.role === 'developer' ? 'ผู้พัฒนา' : 'ผู้เรียน';
+            document.getElementById('nav-avatar').style.backgroundImage = `url('${currentUser.avatar}')`;
+            
+            saveData();
+        }
+        
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            document.getElementById('user-profile').classList.add('hidden');
+            document.getElementById('auth-buttons').classList.remove('hidden');
+        }
+        
+        function showProfileModal() {
+            if (!currentUser) return;
+            
+            let modal = document.getElementById('profile-modal');
+            if (!modal) return;
+            
+            document.getElementById('profile-avatar').style.backgroundImage = `url('${currentUser.avatar}')`;
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-role').textContent = currentUser.role === 'tutor' ? 'ติวเตอร์' : 'ผู้เรียน';
+            document.getElementById('profile-role-detail').textContent = currentUser.role === 'tutor' ? 'ผู้ให้ความรู้' : 'ผู้รับความรู้';
+            
+            modal.classList.remove('hidden');
+        }
+        
+        function closeProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+        
+        function developerLogin() {
+            const code = prompt("🔑 กรอกรหัสผู้พัฒนา");
+            if ( code === "Fiolabelly334682@ssr") {
+                currentUser = { 
+                    name: "ผู้พัฒนา Fairy Tail", 
+                    role: "developer", 
+                    email: "dev@fairy.com",
+                    avatar: "https://picsum.photos/id/669/300/300" 
+                };
+                updateAuthUI();
+                alert("👑 ยินดีต้อนรับ ผู้สร้างปีกผีเสื้อ!");
+                showSection('roles');
+            } else {
+                alert("❌ รหัสไม่ถูกต้อง");
+            }
+        }
+        
+        function createPostModal() {
+            if (!currentUser) {
+                alert("กรุณาเข้าสู่ระบบก่อนโพสต์ 🦋");
+                return;
+            }
+            
+            const content = prompt("✍️ เขียนโพสต์ของคุณ (มีปีกผีเสื้อ 🦋):");
+            if (content && content.trim()) {
+                const newPost = {
+                    id: Date.now(),
+                    author: currentUser.name,
+                    avatar: currentUser.avatar,
+                    time: "เมื่อสักครู่",
+                    content: content.trim(),
+                    likes: 0
+                };
+                
+                posts.unshift(newPost);
+                savePosts();
+                loadPosts();
+                alert("✅ โพสต์สำเร็จแล้ว! ขอบคุณที่ร่วมสร้างชุมชน");
+            }
+        }
+        
+        function loadPosts() {
+            const container = document.getElementById('post-container');
+            container.innerHTML = '';
+            
+            if (posts.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-center text-slate-400 py-20">ยังไม่มีโพสต์ มาเป็นคนแรกเลย!</p>`;
+                return;
+            }
+            
+            posts.forEach(post => {
+                const postEl = document.createElement('div');
+                postEl.className = 'post-card bg-white rounded-3xl p-8 border border-slate-100';
+                postEl.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="${post.avatar}" class="w-12 h-12 rounded-3xl object-cover">
+                        <div>
+                            <p class="font-semibold">${post.author}</p>
+                            <p class="text-xs text-slate-500">${post.time}</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed mb-8">${post.content}</p>
+                    <div class="flex justify-between items-center text-sm">
+                        <button onclick="likePost(${post.id}); this.classList.add('text-red-500')" 
+                                class="flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors">
+                            <i class="fas fa-heart"></i> 
+                            <span>${post.likes}</span>
+                        </button>
+                        <button onclick="commentOnPost(${post.id})" class="flex items-center gap-2 text-slate-400 hover:text-violet-500 transition-colors">
+                            <i class="fas fa-comment"></i> 
+                            <span>ตอบ</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(postEl);
+            });
+        }
+        
+        function likePost(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.likes++;
+                savePosts();
+                loadPosts();
+            }
+        }
+        
+        function commentOnPost(id) {
+            const comment = prompt("💬 แสดงความคิดเห็น:");
+            if (comment) {
+                alert("💬 ความคิดเห็นถูกส่งแล้ว! (ในเวอร์ชันเต็มจะแสดงแบบเรียลไทม์)");
+            }
+        }
+        
+        // Initialize everything
+        function init() {
+            loadData();
+            
+            // Create modals if not present
+            if (!document.getElementById('login-modal')) createLoginModal();
+            if (!document.getElementById('register-modal')) createRegisterModal();
+            
+            // Show home
+            showSection('home');
+            
+            // Make nav links active properly
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
+                    link.classList.add('nav-active');
+                });
+            });
+            
+            console.log('%cFairy Tail เว็บไซต์พร้อมใช้งานแล้ว 🦋', 'color: #6d28d9; font-size: 14px; font-weight: bold');
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>
